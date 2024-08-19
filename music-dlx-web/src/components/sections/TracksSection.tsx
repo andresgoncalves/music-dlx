@@ -1,14 +1,14 @@
 import { ISearch } from "../../models/search";
-import { IAnyTrack } from "../../models/track";
+import { ITrackResult } from "../../models/track";
 import TrackCard from "../cards/TrackCard";
-import Section from "./Section";
+import CardsSection from "./CardsSection";
 
 interface TrackSectionProps {
   type?: "tracks" | "album-tracks";
-  tracks: ISearch<IAnyTrack>;
-  selectedTrack?: IAnyTrack;
-  downloadedTracks?: IAnyTrack[];
-  onSelect: (video: IAnyTrack) => void;
+  tracks: ISearch<ITrackResult>;
+  selectedTrack?: ITrackResult;
+  downloadedTracks?: ITrackResult[];
+  onSelect: (video: ITrackResult) => void;
 }
 
 export function TracksSection({
@@ -19,7 +19,7 @@ export function TracksSection({
   onSelect,
 }: TrackSectionProps) {
   return (
-    <Section title={type === "album-tracks" ? "Álbum" : "Canciones"}>
+    <CardsSection title={type === "album-tracks" ? "Álbum" : "Canciones"}>
       {tracks.results.map((track) => (
         <div key={track.id} className="w-80">
           <TrackCard
@@ -35,6 +35,6 @@ export function TracksSection({
           />
         </div>
       ))}
-    </Section>
+    </CardsSection>
   );
 }

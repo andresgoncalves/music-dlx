@@ -1,9 +1,9 @@
 import { TDownloadStatus } from "../../models/download";
-import { IAnyTrack } from "../../models/track";
+import { ITrackResult } from "../../models/track";
 import { cn } from "../../utils/cn";
 
 interface TrackCardProps {
-  track: IAnyTrack;
+  track: ITrackResult;
   status?: "normal" | "downloaded" | "selected";
   downloadStatus?: TDownloadStatus;
   onClick?: () => void;

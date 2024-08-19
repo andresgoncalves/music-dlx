@@ -16,6 +16,7 @@ def run_command(cmd: str, args=list[str]) -> bool:
 > help [id]
 > start-server
 > get-artist [id]
+> get-artist-albums [id]
 > get-artist-tracks [id]
 > get-album [id]
 > get-album-tracks [id]
@@ -37,6 +38,11 @@ def run_command(cmd: str, args=list[str]) -> bool:
         id = int(args[0])
         artist = data_service.get_artist(id)
         print(artist)
+
+    elif cmd == "get-artist-albums":
+        id = int(args[0])
+        albums = data_service.get_artist_albums(id)
+        print(*albums.results, sep="\n\n")
 
     elif cmd == "get-artist-tracks":
         id = int(args[0])

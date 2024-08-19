@@ -1,12 +1,16 @@
 import { cn } from "../../utils/cn";
 
-interface SectionProps {
+interface CardsSectionProps {
   title: string;
   className?: string;
   children: React.ReactNode;
 }
 
-export default function Section({ title, className, children }: SectionProps) {
+export default function CardsSection({
+  title,
+  className,
+  children,
+}: CardsSectionProps) {
   return (
     <section>
       <div className="p-8 pb-0 text-xl font-bold">{title}</div>

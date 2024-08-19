@@ -18,6 +18,60 @@ def get_artist(id: int) -> Artist:
     return artist
 
 
+def get_artist_albums(id: int, page: int = 0, limit: int = 25) -> Search[AlbumResult]:
+    data = deezer_service.fetch_api(f"/artist/{id}/albums", params={
+        "limit": limit,
+        "index": page * limit
+    })
+
+    artist = get_artist(id)
+
+    albums = [AlbumResult(
+        id=album["id"],
+        title=album["title"],
+        artist=artist,
+        cover=album["cover_xl"]) for album in data["data"]]
+
+    results = Search(query=id,
+                     page=page,
+                     limit=limit,
+                     total=data["total"],
+                     has_next="next" in data,
+                     results=albums)
+
+    return results
+
+
+def get_artist_tracks(id: int, page: int = 0, limit: int = 25) -> Search[TrackResult]:
+    data = deezer_service.fetch_api(f"/artist/{id}/top", params={
+        "limit": limit,
+        "index": page * limit
+    })
+
+    artist = get_artist(id)
+
+    tracks = [TrackResult(
+        id=track["id"],
+        title=track["title"],
+        album=AlbumResult(
+            id=track["album"]["id"],
+            title=track["album"]["title"],
+            artist=artist,
+            cover=track["album"]["cover_xl"]
+        ),
+        artist=artist,
+        duration=track["duration"]) for track in data["data"]]
+
+    results = Search(query=id,
+                     page=page,
+                     limit=limit,
+                     total=data["total"],
+                     has_next="next" in data,
+                     results=tracks)
+
+    return results
+
+
 def get_album(id: int) -> Album:
     data = deezer_service.fetch_api(f"/album/{id}")
 
@@ -57,36 +111,6 @@ def get_album_tracks(id: int) -> Search[TrackResult]:
                      limit=len(tracks),
                      total=len(tracks),
                      has_next=False,
-                     results=tracks)
-
-    return results
-
-
-def get_artist_tracks(id: int, page: int = 0, limit: int = 25) -> Search[TrackResult]:
-    data = deezer_service.fetch_api(f"/artist/{id}/top", params={
-        "limit": limit,
-        "index": page * limit
-    })
-
-    artist = get_artist(id)
-
-    tracks = [TrackResult(
-        id=track["id"],
-        title=track["title"],
-        album=AlbumResult(
-            id=track["album"]["id"],
-            title=track["album"]["title"],
-            artist=artist,
-            cover=track["album"]["cover_xl"]
-        ),
-        artist=artist,
-        duration=track["duration"]) for track in data["data"]]
-
-    results = Search(query=id,
-                     page=page,
-                     limit=limit,
-                     total=data["total"],
-                     has_next="next" in data,
                      results=tracks)
 
     return results

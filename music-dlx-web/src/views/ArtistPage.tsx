@@ -1,33 +1,47 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import DownloadBar from "../components/DownloadBar";
-import SearchBar from "../components/SearchBar";
 import TrackCard from "../components/cards/TrackCard";
+import AlbumsSection from "../components/sections/AlbumsSection";
+import ArtistSection from "../components/sections/ArtistSection";
 import CardsSection from "../components/sections/CardsSection";
 import { TracksSection } from "../components/sections/TracksSection";
 import VideosSection from "../components/sections/VideosSection";
+import { IAlbumResult } from "../models/album";
 import { ITrackResult } from "../models/track";
 import { IVideo } from "../models/video";
 import { useAlbumTracks } from "../services/albums";
+import {
+  useArtist,
+  useArtistAlbums,
+  useArtistTracks,
+} from "../services/artists";
 import { useDownloads } from "../services/download";
-import { useSearchTracks } from "../services/tracks";
 import { useSearchVideos } from "../services/videos";
 
-export default function SearchPage() {
-  const [search, setSearch] = useState<string | null>(null);
+export default function ArtistPage() {
+  const { id } = useParams();
+
+  const artist = useArtist(parseInt(id ?? "0"));
+
+  const [selectedAlbum, setSelectedAlbum] = useState<IAlbumResult | null>(null);
   const [selectedTrack, setSelectedTrack] = useState<ITrackResult | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<IVideo | null>(null);
 
   const { downloads, downloadTrack, clearDownloads } = useDownloads();
 
-  const tracks = useSearchTracks({ query: search });
+  const tracks = useArtistTracks({
+    id: artist.isSuccess ? artist.data.id : null,
+  });
+  const albums = useArtistAlbums({
+    id: artist.isSuccess ? artist.data.id : null,
+  });
+  const albumTracks = useAlbumTracks(selectedAlbum ? selectedAlbum.id : null);
   const videos = useSearchVideos({
     query: selectedTrack
       ? `${selectedTrack.title} ${selectedTrack.artist.name}`
       : null,
   });
-  const albumTracks = useAlbumTracks(
-    selectedTrack ? selectedTrack.album.id : null,
-  );
 
   useEffect(() => {
     setSelectedVideo(null);
@@ -35,10 +49,8 @@ export default function SearchPage() {
 
   return (
     <main className="mb-24">
-      <section className="p-8 pb-0">
-        <SearchBar placeholder="Buscar canciones" onSearch={setSearch} />
-      </section>
-      {tracks.isSuccess ? (
+      {artist.isSuccess && <ArtistSection artist={artist.data} />}
+      {tracks.isSuccess && (
         <TracksSection
           type="tracks"
           tracks={tracks.data}
@@ -48,16 +60,12 @@ export default function SearchPage() {
             .map((download) => download.track)}
           onSelect={setSelectedTrack}
         />
-      ) : (
-        <div className="px-8 py-32 text-center text-gray-500">
-          Realice una búsqueda para empezar
-        </div>
       )}
-      {videos.isSuccess && (
-        <VideosSection
-          videos={videos.data}
-          selectedVideo={selectedVideo ?? undefined}
-          onSelect={setSelectedVideo}
+      {albums.isSuccess && (
+        <AlbumsSection
+          albums={albums.data}
+          selectedAlbum={selectedAlbum ?? undefined}
+          onSelect={setSelectedAlbum}
         />
       )}
       {albumTracks.isSuccess && (
@@ -69,6 +77,13 @@ export default function SearchPage() {
             .filter((download) => download.status === "finished")
             .map((download) => download.track)}
           onSelect={setSelectedTrack}
+        />
+      )}
+      {videos.isSuccess && (
+        <VideosSection
+          videos={videos.data}
+          selectedVideo={selectedVideo ?? undefined}
+          onSelect={setSelectedVideo}
         />
       )}
       {downloads.length > 0 && (
@@ -107,10 +122,9 @@ export default function SearchPage() {
           )}
         </>
       )}
-      <DownloadBar
-        track={selectedTrack ?? undefined}
-        video={selectedVideo ?? undefined}
-      />
+      {selectedTrack && selectedVideo && (
+        <DownloadBar track={selectedTrack} video={selectedVideo} />
+      )}
     </main>
   );
 }

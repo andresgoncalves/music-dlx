@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useLocalStorage } from "usehooks-ts";
 import { IDownload } from "../models/download";
-import { IAnyTrack } from "../models/track";
+import { ITrackResult } from "../models/track";
 import { IVideo } from "../models/video";
 import { getApiUrl } from "../utils/api";
 
@@ -77,7 +77,7 @@ export function useDownloads() {
   );
 
   const downloadTrack = useCallback(
-    ({ track, video }: { track: IAnyTrack; video: IVideo }) => {
+    ({ track, video }: { track: ITrackResult; video: IVideo }) => {
       setDownload({ track, video, status: "pending" });
       downloadAudio({
         track: track.id,

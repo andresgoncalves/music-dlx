@@ -1,7 +1,7 @@
 import { ISearch } from "../../models/search";
 import { IVideo } from "../../models/video";
 import VideoCard from "../cards/VideoCard";
-import Section from "./Section";
+import CardsSection from "./CardsSection";
 
 interface VideosSectionProps {
   videos: ISearch<IVideo>;
@@ -15,7 +15,7 @@ export default function VideosSection({
   onSelect,
 }: VideosSectionProps) {
   return (
-    <Section title="Videos">
+    <CardsSection title="Videos">
       {videos.results.map((video) => (
         <div key={video.id} className="w-60">
           <VideoCard
@@ -25,6 +25,6 @@ export default function VideosSection({
           />
         </div>
       ))}
-    </Section>
+    </CardsSection>
   );
 }

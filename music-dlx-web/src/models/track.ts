@@ -22,5 +22,3 @@ export interface ITrackResult {
   artist: IArtistResult;
   duration: number;
 }
-
-export type IAnyTrack = ITrack | ITrackResult;

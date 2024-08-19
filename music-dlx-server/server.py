@@ -16,6 +16,15 @@ def get_artist(id: str):
     return dataclasses.asdict(artist)
 
 
+@app.get("/artist/<id>/albums")
+def get_artist_albums(id: str):
+    id = int(id)
+    page = int(request.args.get("page", 0))
+    limit = int(request.args.get("limit", 25))
+    albums = data_service.get_artist_albums(id, page=page, limit=limit)
+    return dataclasses.asdict(albums)
+
+
 @app.get("/artist/<id>/tracks")
 def get_artist_tracks(id: str):
     id = int(id)
