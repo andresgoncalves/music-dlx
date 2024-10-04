@@ -146,7 +146,7 @@ query Lyrics($trackId: String!) {
         timestamp=line["lrcTimestamp"],
         duration=line["duration"],
         milliseconds=line["milliseconds"]
-    ) for line in data["track"]["lyrics"]["synchronizedLines"]]
+    ) for line in data["track"]["lyrics"]["synchronizedLines"]] if data["track"]["lyrics"]["synchronizedLines"] else []
 
     lyrics = Lyrics(
         text=data["track"]["lyrics"]["text"],

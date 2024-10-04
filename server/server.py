@@ -1,12 +1,22 @@
 import os
 from flask import Flask, request, send_file
 from flask_cors import CORS
+from pathlib import Path
 import dataclasses
 
 from providers import token_provider
 from services import data_service, search_service, video_service, download_service, metadata_service
 
 app = Flask(__name__)
+
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def client_index(path):
+    fullpath = Path(__file__).parent.joinpath("../web/dist/").joinpath(path)
+    if os.path.isfile(fullpath):
+        return send_file(fullpath)
+    return send_file(Path(__file__).parent.joinpath("../web/dist/index.html"))
 
 
 @app.get("/artist/<id>")
@@ -130,6 +140,7 @@ def download_lyrics():
 def set_refresh_token():
     refresh_token = request.form.get("token")
     token_provider.set_refresh_token(refresh_token)
+    return {"success": True}
 
 
 def start_server():
