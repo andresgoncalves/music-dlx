@@ -46,4 +46,4 @@ COPY server/ .
 EXPOSE 4000
 
 # Command to run the Flask server
-CMD ["gunicorn", "--bind", "0.0.0.0:4000", "server:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:4000", "server:app", "--log-level", "debug"]

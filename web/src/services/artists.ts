@@ -8,7 +8,8 @@ import { fetchApi } from "../utils/api";
 export function useArtist(id: number | null) {
   return useQuery({
     queryKey: ["artist", id],
-    queryFn: () => fetchApi<IArtist>(`/artist/${encodeURIComponent(id ?? "")}`),
+    queryFn: () =>
+      fetchApi<IArtist>(`/api/artist/${encodeURIComponent(id ?? "")}`),
     enabled: id !== null,
   });
 }
@@ -22,7 +23,7 @@ export function useArtistAlbums(params: {
     queryKey: ["artist-albums", params],
     queryFn: () =>
       fetchApi<ISearch<IAlbumResult>>(
-        `/artist/${encodeURIComponent(params.id ?? "")}/albums?${new URLSearchParams(
+        `/api/artist/${encodeURIComponent(params.id ?? "")}/albums?${new URLSearchParams(
           {
             ...(params.page ? { page: `${params.page}` } : {}),
             ...(params.limit ? { limit: `${params.limit}` } : {}),
@@ -42,7 +43,7 @@ export function useArtistTracks(params: {
     queryKey: ["artist-tracks", params],
     queryFn: () =>
       fetchApi<ISearch<ITrackResult>>(
-        `/artist/${encodeURIComponent(params.id ?? "")}/tracks?${new URLSearchParams(
+        `/api/artist/${encodeURIComponent(params.id ?? "")}/tracks?${new URLSearchParams(
           {
             ...(params.page ? { page: `${params.page}` } : {}),
             ...(params.limit ? { limit: `${params.limit}` } : {}),
@@ -62,7 +63,7 @@ export function useSearchArtists(params: {
     queryKey: ["search-artists", params],
     queryFn: () =>
       fetchApi<ISearch<IArtistResult>>(
-        `/search/artists?${new URLSearchParams({
+        `/api/search/artists?${new URLSearchParams({
           query: params.query ?? "",
           ...(params.page ? { page: `${params.page}` } : {}),
           ...(params.limit ? { limit: `${params.limit}` } : {}),

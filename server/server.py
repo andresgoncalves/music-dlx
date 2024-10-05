@@ -8,6 +8,7 @@ from providers import token_provider
 from services import data_service, search_service, video_service, download_service, metadata_service
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route('/', defaults={'path': ''})
@@ -19,14 +20,14 @@ def client_index(path):
     return send_file(Path(__file__).parent.joinpath("../web/dist/index.html"))
 
 
-@app.get("/artist/<id>")
+@app.get("/api/artist/<id>")
 def get_artist(id: str):
     id = int(id)
     artist = data_service.get_artist(id)
     return dataclasses.asdict(artist)
 
 
-@app.get("/artist/<id>/albums")
+@app.get("/api/artist/<id>/albums")
 def get_artist_albums(id: str):
     id = int(id)
     page = int(request.args.get("page", 0))
@@ -35,7 +36,7 @@ def get_artist_albums(id: str):
     return dataclasses.asdict(albums)
 
 
-@app.get("/artist/<id>/tracks")
+@app.get("/api/artist/<id>/tracks")
 def get_artist_tracks(id: str):
     id = int(id)
     page = int(request.args.get("page", 0))
@@ -44,42 +45,42 @@ def get_artist_tracks(id: str):
     return dataclasses.asdict(tracks)
 
 
-@app.get("/album/<id>")
+@app.get("/api/album/<id>")
 def get_album(id: str):
     id = int(id)
     album = data_service.get_album(id)
     return dataclasses.asdict(album)
 
 
-@app.get("/album/<id>/tracks")
+@app.get("/api/album/<id>/tracks")
 def get_album_tracks(id: str):
     id = int(id)
     tracks = data_service.get_album_tracks(id)
     return dataclasses.asdict(tracks)
 
 
-@app.get("/track/<id>")
+@app.get("/api/track/<id>")
 def get_track(id: str):
     id = int(id)
     track = data_service.get_track(id)
     return dataclasses.asdict(track)
 
 
-@app.get("/lyrics/<id>")
+@app.get("/api/lyrics/<id>")
 def get_lyrics(id: str):
     id = int(id)
     lyrics = data_service.get_lyrics(id)
     return dataclasses.asdict(lyrics)["text"]
 
 
-@app.get("/sync-lyrics/<id>")
+@app.get("/api/sync-lyrics/<id>")
 def get_sync_lyrics(id: str):
     id = int(id)
     lyrics = data_service.get_lyrics(id)
     return dataclasses.asdict(lyrics)["sync_text"]
 
 
-@app.get("/search/artists")
+@app.get("/api/search/artists")
 def search_artists():
     query = request.args.get("query")
     page = int(request.args.get("page", 0))
@@ -88,7 +89,7 @@ def search_artists():
     return dataclasses.asdict(artists)
 
 
-@app.get("/search/albums")
+@app.get("/api/search/albums")
 def search_albums():
     query = request.args.get("query")
     page = int(request.args.get("page", 0))
@@ -97,7 +98,7 @@ def search_albums():
     return dataclasses.asdict(albums)
 
 
-@app.get("/search/tracks")
+@app.get("/api/search/tracks")
 def search_tracks():
     query = request.args.get("query")
     page = int(request.args.get("page", 0))
@@ -106,14 +107,14 @@ def search_tracks():
     return dataclasses.asdict(tracks)
 
 
-@app.get("/search/videos")
+@app.get("/api/search/videos")
 def search_videos():
     query = request.args.get("query")
     videos = video_service.search_videos(query)
     return dataclasses.asdict(videos)
 
 
-@app.get("/download/audio")
+@app.get("/api/download/audio")
 def download_audio():
     track_id = int(request.args.get("track"))
     video_id = request.args.get("video")
@@ -125,7 +126,7 @@ def download_audio():
     return send_file(file, as_attachment=True, download_name=f"{track.title} - {track.artist.name}.mp3")
 
 
-@app.get("/download/lyrics")
+@app.get("/api/download/lyrics")
 def download_lyrics():
     track_id = int(request.args.get("track"))
 
@@ -136,7 +137,7 @@ def download_lyrics():
     return send_file(file, as_attachment=True, download_name=f"{track.title} - {track.artist.name}.lrc")
 
 
-@app.post("/refresh-token")
+@app.post("/api/refresh-token")
 def set_refresh_token():
     refresh_token = request.form.get("token")
     token_provider.set_refresh_token(refresh_token)
@@ -144,7 +145,6 @@ def set_refresh_token():
 
 
 def start_server():
-    CORS(app)
     app.run(
         host=os.getenv("HOST", "0.0.0.0"),
         port=int(os.getenv("PORT", "4000")),

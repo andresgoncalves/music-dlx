@@ -13,7 +13,7 @@ export async function downloadAudio({
   video: string;
 }) {
   const url = getApiUrl(
-    `/download/audio?${new URLSearchParams({
+    `/api/download/audio?${new URLSearchParams({
       track: `${track}`,
       video: video,
     })}`,
@@ -27,7 +27,7 @@ export async function downloadAudio({
 
   const anchor = document.createElement("a");
   anchor.style.display = "none";
-  anchor.href = url.href;
+  anchor.href = url;
   anchor.download = "true";
   document.body.appendChild(anchor);
   anchor.click();
@@ -36,14 +36,14 @@ export async function downloadAudio({
 
 export async function downloadLyrics({ track }: { track: number }) {
   const url = getApiUrl(
-    `/download/lyrics?${new URLSearchParams({
+    `/api/download/lyrics?${new URLSearchParams({
       track: `${track}`,
     })}`,
   );
 
   const anchor = document.createElement("a");
   anchor.style.display = "none";
-  anchor.href = url.href;
+  anchor.href = url;
   anchor.download = "true";
   document.body.appendChild(anchor);
   anchor.click();

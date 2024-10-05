@@ -1,8 +1,9 @@
 import requests
+import os
 
 
 _bearer_token = ""
-_refresh_token: str | None = None
+_refresh_token: str | None = os.getenv("REFRESH_TOKEN")
 
 
 def get_bearer_token():

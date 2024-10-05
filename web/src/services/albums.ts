@@ -7,7 +7,8 @@ import { fetchApi } from "../utils/api";
 export function useAlbum(id: number | null) {
   return useQuery({
     queryKey: ["album", id],
-    queryFn: () => fetchApi<IAlbum>(`/album/${encodeURIComponent(id ?? "")}`),
+    queryFn: () =>
+      fetchApi<IAlbum>(`/api/album/${encodeURIComponent(id ?? "")}`),
     enabled: id !== null,
   });
 }
@@ -17,7 +18,7 @@ export function useAlbumTracks(id: number | null) {
     queryKey: ["album-tracks", id],
     queryFn: () =>
       fetchApi<ISearch<ITrackResult>>(
-        `/album/${encodeURIComponent(id ?? "")}/tracks`,
+        `/api/album/${encodeURIComponent(id ?? "")}/tracks`,
       ),
     enabled: id !== null,
   });
@@ -32,7 +33,7 @@ export function useSearchAlbums(params: {
     queryKey: ["search-albums", params],
     queryFn: () =>
       fetchApi<ISearch<IAlbumResult>>(
-        `/search/albums?${new URLSearchParams({
+        `/api/search/albums?${new URLSearchParams({
           query: params.query ?? "",
           ...(params.page ? { page: `${params.page}` } : {}),
           ...(params.limit ? { limit: `${params.limit}` } : {}),

@@ -6,7 +6,8 @@ import { fetchApi } from "../utils/api";
 export function useTrack(id: number | null) {
   return useQuery({
     queryKey: ["track", id],
-    queryFn: () => fetchApi<ITrack>(`/track/${encodeURIComponent(id ?? "")}`),
+    queryFn: () =>
+      fetchApi<ITrack>(`/api/track/${encodeURIComponent(id ?? "")}`),
     enabled: id !== null,
   });
 }
@@ -20,7 +21,7 @@ export function useSearchTracks(params: {
     queryKey: ["search-tracks", params],
     queryFn: () =>
       fetchApi<ISearch<ITrackResult>>(
-        `/search/tracks?${new URLSearchParams({
+        `/api/search/tracks?${new URLSearchParams({
           query: params.query ?? "",
           ...(params.page ? { page: `${params.page}` } : {}),
           ...(params.limit ? { limit: `${params.limit}` } : {}),

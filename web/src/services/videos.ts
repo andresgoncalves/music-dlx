@@ -8,7 +8,7 @@ export function useSearchVideos(params: { query: string | null }) {
     queryKey: ["search-videos", params],
     queryFn: () =>
       fetchApi<ISearch<IVideo>>(
-        `/search/videos?${new URLSearchParams({
+        `/api/search/videos?${new URLSearchParams({
           query: params.query ?? "",
         })}`,
       ),
