@@ -13,7 +13,7 @@ def run_command(cmd: str, args=list[str]) -> bool:
 
     if cmd == "help":
         print("""Supported commands:
-> help [id]
+> help
 > start-server
 > get-artist [id]
 > get-artist-albums [id]
