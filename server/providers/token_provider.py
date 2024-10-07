@@ -1,6 +1,8 @@
 import requests
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 _bearer_token = ""
 _refresh_token: str | None = os.getenv("REFRESH_TOKEN")

@@ -128,7 +128,6 @@ def run_command(cmd: str, args=list[str]) -> bool:
 
 if __name__ == "__main__":
     load_dotenv()
-    token_provider.set_refresh_token(os.getenv("REFRESH_TOKEN"))
 
     if len(sys.argv) > 1:
         print()
