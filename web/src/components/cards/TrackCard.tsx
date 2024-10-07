@@ -26,7 +26,8 @@ export default function TrackCard({
       className={cn(
         "flex w-full items-center overflow-hidden rounded-xl bg-white text-start outline-red-500 hover:outline",
         status === "selected" && "outline outline-2",
-        downloadStatus === "finished" && "outline outline-2 outline-green-500",
+        (status === "downloaded" || downloadStatus === "finished") &&
+          "outline outline-2 outline-green-500",
       )}
       onClick={onClick}
     >
