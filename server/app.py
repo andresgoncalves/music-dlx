@@ -1,6 +1,4 @@
-import os
 import sys
-import gnureadline
 from dotenv import load_dotenv
 
 from providers import token_provider
