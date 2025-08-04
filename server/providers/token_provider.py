@@ -19,6 +19,9 @@ def get_bearer_token():
                         cookies={"refresh-token": _refresh_token})
     data = res.json()
 
+    if "jwt" not in data:
+        return
+
     set_bearer_token(data["jwt"])
     if len(data["refresh_token"]) > 0:
         set_refresh_token(data["refresh_token"])
